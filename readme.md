@@ -6,6 +6,8 @@ Feel free to explore and dive deeper into topics that seem interesting to you. I
 
 ### Git
 
+[Github Education Pack](https://education.github.com/pack)
+
 [Git How To](https://githowto.com)
 
 [Oh shit Git](http://ohshitgit.com)
