@@ -18,6 +18,17 @@ Feel free to explore and dive deeper into topics that seem interesting to you. I
 
 [All the useful content on every topic 🔥🔥](https://github.com/sindresorhus/awesome) — collection of all the resources for the most popular technologies. If you want to learn more about anything, just go there.
 
+### CSS
+
+[Complete Guide to Flexbox 🔥](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
+
+[CSS3 Selectors 🔥](http://flukeout.github.io/)
+
+### Design
+
+[Google Material Design](https://material.io/)
+
+
 ### Javascript
 
 [JavaScript Re-Introduction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/A_re-introduction_to_JavaScript)
@@ -29,13 +40,3 @@ Feel free to explore and dive deeper into topics that seem interesting to you. I
 [Egghead.io ES6 🔥](https://egghead.io/courses/learn-es6-ecmascript-2015)
 
 [FreeCodeCamp OOP JS](https://www.freecodecamp.org/challenges/declare-javascript-objects-as-variables)
-
-### CSS
-
-[Complete Guide to Flexbox 🔥](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
-
-[CSS3 Selectors 🔥](http://flukeout.github.io/)
-
-### Design
-
-[Google Material Design](https://material.io/)
