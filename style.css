@@ -26,6 +26,7 @@ h2 {
 h3 {
     font-family: Montserrat;
     font-weight: 700;
+    font-size: 36px;
 }
 h4 {
     font-family: Montserrat;
@@ -84,6 +85,7 @@ section {
 .row {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 }
 .card {
     background: #FFFFFF;
@@ -95,6 +97,32 @@ section {
     flex-direction: column;
     height: 350px;
     flex-basis: 250px;
-    margin: 0 32px;
+    min-width: 200px;
+    margin: 0 20px;
+    margin-bottom: 32px;
     padding: 20px 10px 40px 10px;
+}
+
+.img-cont {
+    width: 50%;
+}
+
+.text-container {
+    display: flex;
+    width: 35%;
+    flex-direction: column;
+    height: 500px;
+    justify-content: center;
+}
+
+.feature {
+    margin: 50px 0;
+}
+
+.fsec:nth-of-type(even) {
+    background: #FAFAFA;
+}
+
+.fsec:nth-of-type(even) .row {
+    flex-direction: row-reverse
 }
