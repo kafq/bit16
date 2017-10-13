@@ -16,6 +16,8 @@ Feel free to explore and dive deeper into topics that seem interesting to you. I
 
 ### Everything 
 
+[Self-study plan to be better](https://github.com/jwasham/coding-interview-university)
+
 [All the useful content on every topic 🔥🔥](https://github.com/sindresorhus/awesome) — collection of all the resources for the most popular technologies. If you want to learn more about anything, just go there.
 
 ### CSS
