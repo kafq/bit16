@@ -1,4 +1,10 @@
-# Web Development Super-small starter template
+# IMPORTANT!
+
+You can find the example on state and props here: https://github.com/kafq/bit16/tree/0f75d724fd6c29497b9c991ce3598f771c887344
+
+All the previous code is available from commits
+
+# React Native Basics
 
 This repository contains code for future demonstrating simple examples of Object Oriented Programming, recent updates in HTML and CSS: HTML5 semantic syntax, CSS selectors, flexbox and so on.
 
