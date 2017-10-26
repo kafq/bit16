@@ -1,0 +1,157 @@
+/* This is just normalization, it removes all the extra margin and paddings in body */
+body {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    background: #FFF;
+    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif
+}
+:root {
+    --primary: #F64843;
+}
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+h1 {
+    font-family: Montserrat;
+    font-weight: 300;
+}
+h2 {
+    font-family: Montserrat;
+    font-weight: 700;
+    font-size: 72px;
+}
+h3 {
+    font-family: Montserrat;
+    font-weight: 700;
+    font-size: 36px;
+}
+h4 {
+    font-family: Montserrat;
+    font-weight: 700;
+    font-size: 1.2em;
+}
+p {
+    opacity: 0.6;
+    line-height: 1.45;
+}
+button {
+    font-family: 'Montserrat';
+    font-weight: 700;
+    border: 0;
+    outline: 0;
+    border-radius: 50px;
+    box-shadow: 0 35px 38px 0 rgba(0,0,0,0.10);
+    font-size: 30px;
+    padding: 7px 50px;
+}
+.btn-red {
+/* Rectangle Copy 2: */
+color: white;
+background: var(--primary);
+border-radius: 100px;
+}
+.btn-white {
+/* Rectangle: */
+background: #FFFFFF;
+color: var(--primary);
+}
+section {
+    min-height: 100vh;
+    height: 100%;
+    width: 100vw;
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-image: linear-gradient(-225deg, #F03B3D 0%, #E26D2A 13%, #F24F3D 25%, #F34E3E 28%, #F94444 36%, #F84543 48%, #F84543 48%, #F34D41 68%, #F34D41 68%, #F34D41 68%, #E75F3C 100%);
+}
+
+.hero h1 {
+    color: #fff;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+}
+.row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.card {
+    background: #FFFFFF;
+    box-shadow: 0 12px 18px 0 rgba(0,0,0,0.12);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    height: 350px;
+    flex-basis: 250px;
+    min-width: 200px;
+    margin: 0 20px;
+    margin-bottom: 32px;
+    padding: 20px 10px 40px 10px;
+}
+
+.img-cont {
+    width: 50%;
+}
+
+.text-container {
+    display: flex;
+    width: 35%;
+    flex-direction: column;
+    height: 500px;
+    justify-content: center;
+}
+
+.feature {
+    margin: 50px 0;
+}
+
+.fsec:nth-of-type(even) {
+    background: #FAFAFA;
+}
+
+.fsec:nth-of-type(even) .row {
+    flex-direction: row-reverse
+}
+
+.col-1 {
+    display: flex;
+    flex: 1;
+    height: 200px;
+    min-width: 150px;
+    margin: 10px;
+}
+.col-2 {
+    display: flex;
+    flex: 2;
+    height: 200px;
+    min-width: 300px;
+    margin: 10px;
+}
+.col-3 {
+    display: flex;
+    flex: 3;
+    height: 200px;
+    min-width: 500px;
+    margin: 10px;
+}
+.red {
+    background: maroon;
+}
+
+.light {
+    background: lightblue;
+}
