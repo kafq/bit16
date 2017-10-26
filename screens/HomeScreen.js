@@ -23,6 +23,11 @@ export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      /**
+       * We need to have allStories variable, so that the initial data is always available. Otherwise, if we filter the array, the rest of data is deleted.
+       * 
+       * Thus, you need a special variable to show filtered items (stories) and a source data, which we will always render (allStories)
+       */
       allstories: [
         {city: 'Helsinki', title: 'Some story title', id:1, content: 'Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est.'},
         {city: 'Tornio', title: 'It happened almost in Vegas', id:2, content: 'Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est.'},
