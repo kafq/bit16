@@ -9,16 +9,12 @@ import {
   View,
   Button,
   TextInput,
-  Picker
+  Picker,
+  FlatList
 } from 'react-native';
-import { WebBrowser } from 'expo';
 import { StoryComponent } from '../components/StoryComponent';
-import { MonoText } from '../components/StyledText';
+import { CityPicker } from '../components/CityPicker';
 
-
-let story = {
-  description: "Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est"
-}
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
@@ -27,67 +23,73 @@ export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      degrees: 10,
-      convertedValue: 'Value will appear here'
+      allstories: [
+        {city: 'Helsinki', title: 'Some story title', id:1, content: 'Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est.'},
+        {city: 'Tornio', title: 'It happened almost in Vegas', id:2, content: 'Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est.'},
+        {city: 'Tornio', title: 'How I have learnt Flexbox', id:3, content: 'Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est.'},
+        {city: 'Kemi', title: 'Design helps you to sell ideas', id:4, content: 'Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est.'},
+        {city: 'Kemi', title: 'All code secrets', id:5, content: 'Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est.'},
+        {city: 'Haparanda', title: 'Code at speed of light', id:6, content: 'Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est.'},
+        {city: 'Haparanda', title: 'Lapland Safaris', id:7, content: 'Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est.'},
+        {city: 'Helsinki', title: 'Hackjunction to be held', id:8, content: 'Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est.'},
+      ],
+      stories: []
     }
   }
 
   /**
+   * --- Component lifecycle ---
+   * 
+   * Here you can specify any functions that should be executed
+   * before the application will appear
+   */
+
+  componentWillMount() {
+    console.log('I am going to mount')
+  }
+  componentDidMount() {
+    console.log('I did mount');
+  }
+  /**
    * Best place for functions
    */
-  convertToC = () => {
-    let convertedValue = parseInt(this.state.degrees) * 10;
-    this.setState({
-      convertedValue
+  
+  /**
+   * Render stories will go through the array of stories
+   * and leave only those that were specified in the component
+   */
+  renderStories = (city) => {
+    /* Put all the filtered items to storiesFiltered variable,
+     * since you must not modify the state directly
+     */
+    let storiesFiltered = this.state.allstories.filter((item) => {
+      if (item.city === city) {
+        return true
+      }
     })
-  }
-  convertToF = () => {
-    let convertedValue = parseInt(this.state.degrees) * 300;
     this.setState({
-      convertedValue
-    })
-  }
-  increment = () => {
-    this.setState({
-      degrees: this.state.degrees + 1
+      stories: storiesFiltered
     })
   }
   
   render() {
     return (
-      <ScrollView>
-        <View style={styles.pseudobar}/>
-        <Text></Text>
-        <Text></Text>
-        <StoryComponent title={"Heading 1"} description={story.description}/>
-        <StoryComponent title={"Heading 2"} description={story.description}/>
-        <StoryComponent title={"Heading 3"} description={story.description}/>
-        <Text></Text>
-        
-        <TextInput
-          editable
-          maxLength = {40}
-          onChangeText={(email) => this.setState({email})}
-          value={this.state.degrees}
-          keyboardType={'email'}
+      <ScrollView style={styles.container}>
+        {/* FlatList gets items from the specified array and wraps them into specified components. In this case, it's <StoryComponent/>  */}
+        <FlatList
+          style={styles.list}
+          data={this.state.stories}
+          renderItem={({item}) => <StoryComponent title={item.title} city={item.city} content={item.content}/>}
         />
-
-        <Text style={styles.heading}>Degrees: {this.state.convertedValue}</Text>
-        <Button
-          title="convert to C"
-          onPress={() => {this.convertToC()}}/>
-          <Button
-          title="convert to F"
-          onPress={() => {this.convertToF()}}/>
-
-          <Picker
-            selectedValue={this.state.city}
-            onValueChange={(itemValue, itemIndex) => this.setState({city: itemValue})}>
-            <Picker.Item label="Tornio" value="tornio" />
-            <Picker.Item label="Kemi" value="kemi" />
-            <Picker.Item label="Haparanda" value="haparanda" />
-            <Picker.Item label="Helsinki" value="helsinki" />
-          </Picker>
+        {/* We have separated the logic of picker, so that you can use this component in any other screens
+        
+        handlePress={this.renderStories} firstly gives a name for function props and then specifies the function that should be executed in the parent component
+         */}
+        <CityPicker
+          pickerType={'Stories'}
+          handlePress={this.renderStories}
+          />
+        <View style={styles.gutter}/>
       </ScrollView>
     );
   }
@@ -95,13 +97,20 @@ export default class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  pseudobar: {
+  container: {
     flex: 1,
-    height: 45,
-    width: 100
+    paddingTop: 50
+  },
+  list: {
+    flex: 1,
+    marginBottom: 24
   },
   heading: {
     fontSize: 24,
     fontWeight: '700'
+  },
+  gutter: {
+    height: 200,
+    backgroundColor: 'white'
   }
 })
