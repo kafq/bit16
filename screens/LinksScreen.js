@@ -31,6 +31,18 @@ let locations = [{
   name: 'Random 5',
   latitude: 68,
   longitude: 26
+},{
+  name: 'Random 6',
+  latitude: 66.1,
+  longitude: 25
+},{
+  name: 'Random 7',
+  latitude: 66.1,
+  longitude: 26
+},{
+  name: 'Random 8',
+  latitude: 66.1,
+  longitude: 28
 }]
 
 
@@ -58,8 +70,11 @@ export default class LinksScreen extends React.Component {
     console.log(location);
   }
 
-  isNearby = (item) => {
-    
+  filterNearbyLocations = (locations) => {
+    let filteredLocations = locations.filter((location) => {
+        return (location.latitude - this.state.location.coords.latitude) < 0.1  
+    })
+    return filteredLocations;
   }
 
   render() {
@@ -75,7 +90,16 @@ export default class LinksScreen extends React.Component {
             longitudeDelta: 0.0421,
           }}
         >
+        
+        {
 
+          this.filterNearbyLocations(locations).map((marker) => (<MapView.Marker
+                                        title={marker.name}
+                                        coordinate={{
+                                          latitude: marker.latitude,
+                                          longitude: marker.longitude
+                                        }}/>))
+        }
         <MapView.Marker
           title={'You are here'}
           pinColor={"#CDCDCD"}
