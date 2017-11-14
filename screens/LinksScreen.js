@@ -1,6 +1,10 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import { MapView, Constants, Location, Permissions } from 'expo';
+import Geocoder from 'react-native-geocoding';
+import Async from 'react-promise'
+Geocoder.setApiKey('AIzaSyAIFxMO56gBAJyOMdSsFAMzfCrVe2HqYP4');
+
 
 const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
 
@@ -42,21 +46,71 @@ export default class LinksScreen extends React.Component {
     title: 'Links',
   };
 
-  state = {
-    location: { coords: {latitude: 0, longitude: 0}},
-  };
+    
+  constructor(props) {
+    super(props);
+    this.state = {
+      location: { coords: {latitude: 0, longitude: 0}}
+    }
+    this.findLocation = this.findLocation.bind(this)
+  }
 
 
   componentWillMount() {
     Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
+
+    fetch('https://tietojenkasittely.lapinamk.fi/bit16/ourstories_example/getCompanyAddress.php', {
+			method: 'post',
+			header:{
+				'Accept': 'application/json',
+				'Content-type': 'application/json'
+			},
+			body:JSON.stringify({
+        key: 'test',
+			})
+		})
+		.then((response) => response.json())
+			.then((responseJson) =>{
+				this.setState ({ data: responseJson.companies })
+      }).then((res) => {
+        var myMarkers = this.state.data.map((marker) => {
+          var address = marker.Street + ', ' + marker.City
+          return Geocoder.getFromLocation(address).then(
+                  json => {
+                    var location = json.results[0].geometry.location;
+                    return [location.lat, location.lng]
+                  },
+                  error => {
+                    console.log(error);
+                  }
+                ).then((val) => {
+                  var resultHere = []
+                  var o = Object.assign({}, marker);
+                  o.lat = val[0];
+                  o.lng = val[1];
+                  return o;
+                })
+        })
+        Promise.all(myMarkers).then(function(results) {
+          this.setState({ myMarkers: results })
+      }.bind(this))
+      })
+      .catch((error)=>{
+				console.error(error);
+      });
+  }
+  
+
+  findLocation(address){
+    console.log(address)
   }
 
   locationChanged = (location) => {
     region = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
-      latitudeDelta: 0.1,
-      longitudeDelta: 0.05,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01
     },
     this.setState({location, region})
   }
@@ -66,7 +120,7 @@ export default class LinksScreen extends React.Component {
   }
 
   render() {
-    if(this.state.location) {
+    if(this.state.myMarkers) {
       return(
       <View style={{flex: 1}}>
         <MapView
@@ -74,30 +128,25 @@ export default class LinksScreen extends React.Component {
           showsUserLocation={true}
           region={this.state.region}
           initialRegion={{
-            latitude: this.state.location.coords.latitude,
-            longitude: this.state.location.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitude: 65.8444,
+            longitude: 24.1449,
+            latitudeDelta: 0.0222,
+            longitudeDelta: 0.0121,
           }}
         >
-{/* 
-        <MapView.Marker
-          title={'You are here'}
-          pinColor={"#CDCDCD"}
-          description = {'Lorem ipsum dolor sit amet consectur in vina veritas'}
-          coordinate={{
-            latitude: this.state.location.coords.latitude,
-            longitude: this.state.location.coords.longitude,
-          }}
-        />
+          {this.state.myMarkers.map((marker, i) => (
+  
+            <MapView.Marker
+               key={i}
+               coordinate = {{
+                latitude: parseFloat(marker.lat),
+                longitude: parseFloat(marker.lng)
+              }}
+              title={marker.Companyname}
+              description={marker.Web}
+            />
 
-        <MapView.Marker
-          title={'Rovaniemi'}
-          coordinate={{
-            latitude: 66.486885,
-            longitude: 25.684170,
-          }}
-        /> */}
+))}
 
         </MapView>
       </View>)
