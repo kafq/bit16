@@ -43,9 +43,11 @@ let locations = [{
   name: 'Random 8',
   latitude: 66.1,
   longitude: 28
+},{
+  name: 'Random 9',
+  latitude: 64,
+  longitude: 24.1
 }]
-
-
 
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
@@ -61,8 +63,16 @@ export default class LinksScreen extends React.Component {
 
   componentWillMount() {
     this.getLocation();
+    Location.watchPositionAsync({}, this.updateLocation);
   }
 
+  updateLocation = (location) => {
+    this.setState({
+      location: location
+    }, () => {
+      console.log(this.state.location);
+    })
+  }
   getLocation = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     let location = await Location.getCurrentPositionAsync({});
@@ -71,8 +81,9 @@ export default class LinksScreen extends React.Component {
   }
 
   filterNearbyLocations = (locations) => {
+    
     let filteredLocations = locations.filter((location) => {
-        return (location.latitude - this.state.location.coords.latitude) < 0.1  
+        return (Math.abs(location.latitude - this.state.location.coords.latitude) < 0.4) && (Math.abs(location.longitude - this.state.location.coords.longitude) < 0.4)
     })
     return filteredLocations;
   }
