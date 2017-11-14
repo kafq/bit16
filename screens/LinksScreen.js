@@ -2,6 +2,39 @@ import React from 'react';
 import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import { MapView, Location, Permissions } from 'expo';
 
+
+let locations = [{
+  name: 'Tornio',
+  latitude: 65.851698,
+  longitude: 24.142675
+},{
+  name: 'Sumisaari',
+  latitude: 65.908000,
+  longitude: 24.128172
+},{
+  name: 'Random 1',
+  latitude: 66,
+  longitude: 24,
+},{
+  name: 'Random 2',
+  latitude: 66.1,
+  longitude: 24.1
+},{
+  name: 'Random 3',
+  latitude: 66.2,
+  longitude: 24.2
+},{
+  name: 'Random 4',
+  latitude: 66.3,
+  longitude: 24.3
+},{
+  name: 'Random 5',
+  latitude: 68,
+  longitude: 26
+}]
+
+
+
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
     title: 'Links',
@@ -25,7 +58,8 @@ export default class LinksScreen extends React.Component {
     console.log(location);
   }
 
-  isNearby = () => {
+  isNearby = (item) => {
+    
   }
 
   render() {
