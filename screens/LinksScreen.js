@@ -1,6 +1,8 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View, Text } from 'react-native';
-import { MapView, Location, Permissions } from 'expo';
+import { MapView, Constants, Location, Permissions } from 'expo';
+
+const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
 
 
 let locations = [{
@@ -40,22 +42,23 @@ export default class LinksScreen extends React.Component {
     title: 'Links',
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      location: null
-    }
-  }
+  state = {
+    location: { coords: {latitude: 0, longitude: 0}},
+  };
+
 
   componentWillMount() {
-    this.getLocation();
+    Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
   }
 
-  getLocation = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    let location = await Location.getCurrentPositionAsync({});
-    this.setState({ location: location });
-    console.log(location);
+  locationChanged = (location) => {
+    region = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: 0.1,
+      longitudeDelta: 0.05,
+    },
+    this.setState({location, region})
   }
 
   isNearby = (item) => {
@@ -68,6 +71,8 @@ export default class LinksScreen extends React.Component {
       <View style={{flex: 1}}>
         <MapView
           style={{ flex: 1 }}
+          showsUserLocation={true}
+          region={this.state.region}
           initialRegion={{
             latitude: this.state.location.coords.latitude,
             longitude: this.state.location.coords.longitude,
@@ -75,7 +80,7 @@ export default class LinksScreen extends React.Component {
             longitudeDelta: 0.0421,
           }}
         >
-
+{/* 
         <MapView.Marker
           title={'You are here'}
           pinColor={"#CDCDCD"}
@@ -92,7 +97,7 @@ export default class LinksScreen extends React.Component {
             latitude: 66.486885,
             longitude: 25.684170,
           }}
-        />
+        /> */}
 
         </MapView>
       </View>)
