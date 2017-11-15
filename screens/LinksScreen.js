@@ -1,6 +1,9 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import { MapView, Location, Permissions } from 'expo';
+import Geocoder from 'react-native-geocoding';
+
+Geocoder.setApiKey('AIzaSyAIFxMO56gBAJyOMdSsFAMzfCrVe2HqYP4');
 
 
 let locations = [{
@@ -64,6 +67,51 @@ export default class LinksScreen extends React.Component {
   componentWillMount() {
     this.getLocation();
     Location.watchPositionAsync({}, this.updateLocation);
+
+    fetch('https://tietojenkasittely.lapinamk.fi/bit16/ourstories_example/getCompanyAddress.php', {
+			method: 'post',
+			header:{
+				'Accept': 'application/json',
+				'Content-type': 'application/json'
+			},
+			body:JSON.stringify({
+        key: 'test',
+			})
+		})
+		.then((response) => response.json())
+			.then((responseJson) =>{
+				this.setState ({ data: responseJson.companies })
+      }).then((res) => {
+        var myMarkers = this.state.data.map((marker) =>{
+          // Combine street and city to get address
+          var address = marker.Street + ', ' + marker.City
+          // Send address to function
+          return Geocoder.getFromLocation(address).then(
+            json => {
+              var location = json.results[0].geometry.location;
+              return [location.lat, location.lng]
+            },
+            error => {
+              console.log(error);
+            }
+          ).then((result) => {
+            var oldObject = Object.assign({}, marker);
+            oldObject.lat = result[0];
+            oldObject.lng = result[1];
+            return oldObject;
+          })
+        })
+        Promise.all(myMarkers).then((results) => {
+          this.setState({ myMarkers: results })
+        })
+      })
+      
+
+
+			.catch((error)=>{
+				console.error(error);
+			});
+
   }
 
   updateLocation = (location) => {
@@ -89,7 +137,7 @@ export default class LinksScreen extends React.Component {
   }
 
   render() {
-    if(this.state.location) {
+    if(this.state.myMarkers) {
       return(
       <View style={{flex: 1}}>
         <MapView
@@ -102,9 +150,19 @@ export default class LinksScreen extends React.Component {
           }}
         >
         
-        {
 
-          this.filterNearbyLocations(locations).map((marker) => (<MapView.Marker
+        {this.state.myMarkers.map((marker, i) => (
+          <MapView.Marker
+          key={i}
+          title={marker.Companyname}
+          description={marker.Web}
+          coordinate={{
+            latitude: marker.lat,
+            longitude: marker.lng
+          }}/>
+        ))}
+        {this.filterNearbyLocations(locations).map((marker, i) => (<MapView.Marker
+                                        key={i}
                                         title={marker.name}
                                         coordinate={{
                                           latitude: marker.latitude,
@@ -127,7 +185,7 @@ export default class LinksScreen extends React.Component {
             latitude: 66.486885,
             longitude: 25.684170,
           }}
-        />
+        />  
 
         </MapView>
       </View>)
