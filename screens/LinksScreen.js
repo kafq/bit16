@@ -4,70 +4,24 @@ import { MapView, Location, Permissions } from 'expo';
 import Geocoder from 'react-native-geocoding';
 
 Geocoder.setApiKey('AIzaSyAIFxMO56gBAJyOMdSsFAMzfCrVe2HqYP4');
+// Step 1
+const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
 
-
-let locations = [{
-  name: 'Tornio',
-  latitude: 65.851698,
-  longitude: 24.142675
-},{
-  name: 'Sumisaari',
-  latitude: 65.908000,
-  longitude: 24.128172
-},{
-  name: 'Random 1',
-  latitude: 66,
-  longitude: 24,
-},{
-  name: 'Random 2',
-  latitude: 66.1,
-  longitude: 24.1
-},{
-  name: 'Random 3',
-  latitude: 66.2,
-  longitude: 24.2
-},{
-  name: 'Random 4',
-  latitude: 66.3,
-  longitude: 24.3
-},{
-  name: 'Random 5',
-  latitude: 68,
-  longitude: 26
-},{
-  name: 'Random 6',
-  latitude: 66.1,
-  longitude: 25
-},{
-  name: 'Random 7',
-  latitude: 66.1,
-  longitude: 26
-},{
-  name: 'Random 8',
-  latitude: 66.1,
-  longitude: 28
-},{
-  name: 'Random 9',
-  latitude: 64,
-  longitude: 24.1
-}]
 
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
     title: 'Links',
   };
-
+// Step 2 location state
   constructor(props) {
     super(props);
     this.state = {
-      location: null
+      location: { coords: {latitude: 0, longitude: 0}},
     }
   }
-
+// Step 3 Watch Position Async
   componentWillMount() {
-    this.getLocation();
-    Location.watchPositionAsync({}, this.updateLocation);
-
+    Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
     fetch('https://tietojenkasittely.lapinamk.fi/bit16/ourstories_example/getCompanyAddress.php', {
 			method: 'post',
 			header:{
@@ -113,34 +67,31 @@ export default class LinksScreen extends React.Component {
 			});
 
   }
-
-  updateLocation = (location) => {
-    this.setState({
-      location: location
-    }, () => {
-      console.log(this.state.location);
-    })
+// Step 4
+  locationChanged = (location) => {
+    region = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: 0.1,
+      longitudeDelta: 0.05,
+    },
+    this.setState({location, region})
   }
-  getLocation = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    let location = await Location.getCurrentPositionAsync({});
-    this.setState({ location: location });
-    console.log(location);
-  }
-
-  filterNearbyLocations = (locations) => {
+// Step 5 Change this
+  filterNearbyLocations = () => {
     
-    let filteredLocations = locations.filter((location) => {
-        return (Math.abs(location.latitude - this.state.location.coords.latitude) < 0.4) && (Math.abs(location.longitude - this.state.location.coords.longitude) < 0.4)
+    let filteredLocations = this.state.myMarkers.filter((location) => {
+        return (Math.abs(location.lat - this.state.region.latitude) < 0.4) && (Math.abs(location.lng - this.state.region.longitude) < 0.4)
     })
     return filteredLocations;
   }
-
+// Step 6 change the MapView initialRegion
   render() {
     if(this.state.myMarkers) {
       return(
       <View style={{flex: 1}}>
         <MapView
+        showsUserLocation={true}
           style={{ flex: 1 }}
           initialRegion={{
             latitude: this.state.location.coords.latitude,
@@ -151,7 +102,7 @@ export default class LinksScreen extends React.Component {
         >
         
 
-        {this.state.myMarkers.map((marker, i) => (
+        {/* {this.state.myMarkers.map((marker, i) => (
           <MapView.Marker
           key={i}
           title={marker.Companyname}
@@ -160,8 +111,8 @@ export default class LinksScreen extends React.Component {
             latitude: marker.lat,
             longitude: marker.lng
           }}/>
-        ))}
-        {this.filterNearbyLocations(locations).map((marker, i) => (<MapView.Marker
+        ))} */}
+        {this.filterNearbyLocations().map((marker, i) => (<MapView.Marker
                                         key={i}
                                         title={marker.name}
                                         coordinate={{
@@ -169,15 +120,6 @@ export default class LinksScreen extends React.Component {
                                           longitude: marker.longitude
                                         }}/>))
         }
-        <MapView.Marker
-          title={'You are here'}
-          pinColor={"#CDCDCD"}
-          description = {'Lorem ipsum dolor sit amet consectur in vina veritas'}
-          coordinate={{
-            latitude: this.state.location.coords.latitude,
-            longitude: this.state.location.coords.longitude,
-          }}
-        />
 
         <MapView.Marker
           title={'Rovaniemi'}
