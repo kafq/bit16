@@ -16,7 +16,7 @@ export default class LinksScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      location: { coords: {latitude: 0, longitude: 0}},
+      location: { coords: {latitude: 65.849160, longitude: 24.142133}},
     }
   }
 // Step 3 Watch Position Async
@@ -78,13 +78,15 @@ export default class LinksScreen extends React.Component {
     this.setState({location, region})
   }
 // Step 5 Change this
-  // filterNearbyLocations = () => {
-    
-  //   let filteredLocations = this.state.myMarkers.filter((location) => {
-  //       return (Math.abs(location.lat - this.state.region.latitude) < 0.4) && (Math.abs(location.lng - this.state.region.longitude) < 0.4)
-  //   })
-  //   return filteredLocations;
-  // }
+  filterNearbyLocations = () => {
+    let filteredLocations = this.state.myMarkers.filter((location) => {
+      console.log(location)
+        return 
+          (Math.abs(location.lat - this.state.region.latitude) < 0.4) && 
+          (Math.abs(location.lng - this.state.region.longitude) < 0.4)
+    })
+    return filteredLocations;
+  }
 // Step 6 change the MapView initialRegion
   render() {
     if(this.state.myMarkers) {
@@ -112,14 +114,15 @@ export default class LinksScreen extends React.Component {
             longitude: marker.lng
           }}/>
         ))}
-        {/* {this.filterNearbyLocations().map((marker, i) => (<MapView.Marker
+        {this.filterNearbyLocations().map((marker, i) => (<MapView.Marker
                                         key={i}
+                                        color={'green'}
                                         title={marker.name}
                                         coordinate={{
                                           latitude: marker.latitude,
                                           longitude: marker.longitude
                                         }}/>))
-        } */}
+        }
 
         <MapView.Marker
           title={'Rovaniemi'}
