@@ -6,52 +6,6 @@ import Geocoder from 'react-native-geocoding';
 Geocoder.setApiKey('AIzaSyAIFxMO56gBAJyOMdSsFAMzfCrVe2HqYP4');
 
 
-let locations = [{
-  name: 'Tornio',
-  latitude: 65.851698,
-  longitude: 24.142675
-},{
-  name: 'Sumisaari',
-  latitude: 65.908000,
-  longitude: 24.128172
-},{
-  name: 'Random 1',
-  latitude: 66,
-  longitude: 24,
-},{
-  name: 'Random 2',
-  latitude: 66.1,
-  longitude: 24.1
-},{
-  name: 'Random 3',
-  latitude: 66.2,
-  longitude: 24.2
-},{
-  name: 'Random 4',
-  latitude: 66.3,
-  longitude: 24.3
-},{
-  name: 'Random 5',
-  latitude: 68,
-  longitude: 26
-},{
-  name: 'Random 6',
-  latitude: 66.1,
-  longitude: 25
-},{
-  name: 'Random 7',
-  latitude: 66.1,
-  longitude: 26
-},{
-  name: 'Random 8',
-  latitude: 66.1,
-  longitude: 28
-},{
-  name: 'Random 9',
-  latitude: 64,
-  longitude: 24.1
-}]
-
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
     title: 'Links',
@@ -65,7 +19,6 @@ export default class LinksScreen extends React.Component {
   }
 
   componentWillMount() {
-    this.getLocation();
     Location.watchPositionAsync({}, this.updateLocation);
 
     fetch('https://tietojenkasittely.lapinamk.fi/bit16/ourstories_example/getCompanyAddress.php', {
@@ -114,19 +67,19 @@ export default class LinksScreen extends React.Component {
 
   }
 
-  updateLocation = (location) => {
-    this.setState({
-      location: location
-    }, () => {
-      console.log(this.state.location);
-    })
-  }
-  getLocation = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    let location = await Location.getCurrentPositionAsync({});
-    this.setState({ location: location });
-    console.log(location);
-  }
+  // updateLocation = (location) => {
+  //   this.setState({
+  //     location: location
+  //   }, () => {
+  //     console.log(this.state.location);
+  //   })
+  // }
+  // getLocation = async () => {
+  //   let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  //   let location = await Location.getCurrentPositionAsync({});
+  //   this.setState({ location: location });
+  //   console.log(location);
+  // }
 
   filterNearbyLocations = (locations) => {
     
@@ -161,15 +114,15 @@ export default class LinksScreen extends React.Component {
             longitude: marker.lng
           }}/>
         ))}
-        {this.filterNearbyLocations(locations).map((marker, i) => (<MapView.Marker
+        {/* {this.filterNearbyLocations(locations).map((marker, i) => (<MapView.Marker
                                         key={i}
                                         title={marker.name}
                                         coordinate={{
                                           latitude: marker.latitude,
                                           longitude: marker.longitude
                                         }}/>))
-        }
-        <MapView.Marker
+        } */}
+        {/* <MapView.Marker
           title={'You are here'}
           pinColor={"#CDCDCD"}
           description = {'Lorem ipsum dolor sit amet consectur in vina veritas'}
@@ -177,7 +130,7 @@ export default class LinksScreen extends React.Component {
             latitude: this.state.location.coords.latitude,
             longitude: this.state.location.coords.longitude,
           }}
-        />
+        /> */}
 
         <MapView.Marker
           title={'Rovaniemi'}
