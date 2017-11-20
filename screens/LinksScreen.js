@@ -1,7 +1,9 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Text } from 'react-native';
+import { ScrollView, StyleSheet, View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { MapView, Location, Permissions } from 'expo';
 import Geocoder from 'react-native-geocoding';
+import Layout from '../constants/Layout';
+import { StoryComponent } from '../components/StoryComponent';
 
 Geocoder.setApiKey('AIzaSyAIFxMO56gBAJyOMdSsFAMzfCrVe2HqYP4');
 // Step 1
@@ -17,7 +19,9 @@ export default class LinksScreen extends React.Component {
     super(props);
     this.state = {
       location: { coords: {latitude: 65.849160, longitude: 24.142133}},
+      newMarkers: []
     }
+    this.updateMarkers = this.updateMarkers.bind(this)
   }
 // Step 3 Watch Position Async
   componentWillMount() {
@@ -78,14 +82,15 @@ export default class LinksScreen extends React.Component {
     this.setState({location, region})
   }
 // Step 5 Change this
-  filterNearbyLocations = () => {
-    let filteredLocations = this.state.myMarkers.filter((location) => {
-      console.log(location)
-        return 
-          (Math.abs(location.lat - this.state.region.latitude) < 0.4) && 
-          (Math.abs(location.lng - this.state.region.longitude) < 0.4)
+
+  filterNearbyLocations() {
+    return this.state.myMarkers.filter((location) => {
+        return Math.abs(location.lat - this.state.region.latitude) < 0.004
     })
-    return filteredLocations;
+  }
+  updateMarkers() {
+    let newMarkers = this.filterNearbyLocations();
+    this.setState({newMarkers})
   }
 // Step 6 change the MapView initialRegion
   render() {
@@ -94,7 +99,7 @@ export default class LinksScreen extends React.Component {
       <View style={{flex: 1}}>
         <MapView
         showsUserLocation={true}
-          style={{ flex: 1 }}
+          style={{ flex: 2 }}
           initialRegion={{
             latitude: this.state.location.coords.latitude,
             longitude: this.state.location.coords.longitude,
@@ -104,7 +109,7 @@ export default class LinksScreen extends React.Component {
         >
         
 
-        {this.state.myMarkers.map((marker, i) => (
+        {/* {this.state.myMarkers.map((marker, i) => (
           <MapView.Marker
           key={i}
           title={marker.Companyname}
@@ -113,15 +118,17 @@ export default class LinksScreen extends React.Component {
             latitude: marker.lat,
             longitude: marker.lng
           }}/>
-        ))}
-        {this.filterNearbyLocations().map((marker, i) => (<MapView.Marker
-                                        key={i}
-                                        color={'green'}
-                                        title={marker.name}
-                                        coordinate={{
-                                          latitude: marker.latitude,
-                                          longitude: marker.longitude
-                                        }}/>))
+        ))} */}
+        {this.filterNearbyLocations().map((marker, i) => (
+        <MapView.Marker
+          key={i}
+          title={marker.Companyname}
+          color={"green"}
+          description={marker.Web}
+          coordinate={{
+            latitude: marker.lat,
+            longitude: marker.lng
+          }}/>))
         }
 
         <MapView.Marker
@@ -130,9 +137,22 @@ export default class LinksScreen extends React.Component {
             latitude: 66.486885,
             longitude: 25.684170,
           }}
-        />  
+        /> 
 
         </MapView>
+        <View style={styles.listContainer}>
+          <TouchableOpacity
+          style={styles.button}
+          onPress={() => this.updateMarkers()}>
+            <Text>Show Markers</Text>
+          </TouchableOpacity>
+          <FlatList
+          horizontal
+          style={styles.list}
+          data={this.state.newMarkers}
+          renderItem={({item}) => <StoryComponent title={item.Companyname} city={item.City} content={item.Web}/>}
+        />
+        </View>
       </View>)
     }
     else {
@@ -150,4 +170,19 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     backgroundColor: '#fff',
   },
+  listContainer: {
+    flex: 1,
+    position:'absolute',
+    top: Layout.window.height * 0.5,
+    width: Layout.window.width
+  },
+  button: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 150,
+    height: 50,
+    backgroundColor: '#fff',
+    borderRadius: 100
+  }
 });
