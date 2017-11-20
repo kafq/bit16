@@ -91,6 +91,22 @@ export default class LinksScreen extends React.Component {
   updateMarkers() {
     let newMarkers = this.filterNearbyLocations();
     this.setState({newMarkers})
+
+    // Send visited markers back to database
+    fetch('YOUR FILE LOCATION', {
+			method: 'post',
+			header:{
+				'Accept': 'application/json',
+				'Content-type1': 'application/json'
+			},
+			body:JSON.stringify({
+        key: 'test',
+        visitedPlaces: this.state.newMarkers
+			})
+    }).then((res) => {console.log('Done')})
+    .catch((error)=>{
+      console.error(error);
+    });
   }
 // Step 6 change the MapView initialRegion
   render() {
